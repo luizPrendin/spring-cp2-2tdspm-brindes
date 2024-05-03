@@ -16,7 +16,7 @@ public interface ServiceDTO<Entity, Request, Response> {
      *
      * @return
      */
-    public Collection<Entity> findAll();
+    //public Collection<Entity> findAll();
 
     /**
      * Consulta todas as entidades conforme o exemplo fornecido
