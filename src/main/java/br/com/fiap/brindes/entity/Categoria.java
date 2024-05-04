@@ -26,10 +26,7 @@ public class Categoria {
     @Column(name = "ID_CATEGORIA")
     private Long id;
 
-    //Canetas
-    //Camisetas
-    //Canecas
-    //Mochilas
+
     @Column(name = "NM_CATEGORIA")
     private String nome;
 

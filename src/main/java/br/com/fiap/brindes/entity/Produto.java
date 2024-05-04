@@ -32,7 +32,14 @@ public class Produto {
     @Column(name = "PRECO_PROD")
     private Double preco;
 
-    @Column(name = "CATEGORIA")
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(
+            name = "CATEGORIA",
+            referencedColumnName = "ID_CATEGORIA",
+            foreignKey = @ForeignKey(
+                    name = "FK_CATEGORIA_PRODUTO"
+            )
+    )
     private Categoria categoria;
 
 
