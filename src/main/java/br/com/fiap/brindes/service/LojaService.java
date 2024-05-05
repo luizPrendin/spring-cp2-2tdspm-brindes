@@ -1,15 +1,21 @@
 package br.com.fiap.brindes.service;
 
-import br.com.fiap.brindes.dto.request.LojaRequest;
-import br.com.fiap.brindes.dto.response.LojaResponse;
-import br.com.fiap.brindes.entity.Loja;
-import br.com.fiap.brindes.repository.LojaRepository;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
+import br.com.fiap.brindes.dto.request.LojaRequest;
+import br.com.fiap.brindes.dto.response.LojaResponse;
+import br.com.fiap.brindes.dto.response.ProdutoResponse;
+import br.com.fiap.brindes.entity.Loja;
+import br.com.fiap.brindes.entity.Produto;
+import br.com.fiap.brindes.repository.LojaRepository;
 
 @Service
 public class LojaService implements ServiceDTO<Loja, LojaRequest, LojaResponse>{
@@ -37,19 +43,28 @@ public class LojaService implements ServiceDTO<Loja, LojaRequest, LojaResponse>{
 
     @Override
     public Loja toEntity(LojaRequest dto) {
-        return Loja.builder()
+        Loja loja = Loja.builder()
                 .nome(dto.nome())
+                .produtosComercializados(new LinkedHashSet<>()) 
                 .build();
+
+        return loja;
     }
 
-    @Override
+
     public LojaResponse toResponse(Loja e) {
-        var produtos = e.getProdutosComercializados().stream().map(produtoService::toResponse).toList();
+       
+        Set<Produto> produtos = e.getProdutosComercializados() != null ? e.getProdutosComercializados() : new LinkedHashSet<>();
+
+        List<ProdutoResponse> produtoResponses = produtos.stream()
+                .map(produtoService::toResponse)
+                .collect(Collectors.toList());
 
         return LojaResponse.builder()
                 .id(e.getId())
                 .nome(e.getNome())
-                .produtosComercializados(produtos)
+                .produtosComercializados(produtoResponses)
                 .build();
     }
+
 }

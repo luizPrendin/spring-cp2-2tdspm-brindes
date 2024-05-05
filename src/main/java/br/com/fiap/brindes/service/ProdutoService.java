@@ -1,16 +1,19 @@
 package br.com.fiap.brindes.service;
 
-import br.com.fiap.brindes.dto.request.ProdutoRequest;
-import br.com.fiap.brindes.dto.response.CategoriaResponse;
-import br.com.fiap.brindes.dto.response.ProdutoResponse;
-import br.com.fiap.brindes.entity.Produto;
-import br.com.fiap.brindes.repository.Produtorepository;
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
+import br.com.fiap.brindes.dto.request.ProdutoRequest;
+import br.com.fiap.brindes.dto.response.ProdutoResponse;
+import br.com.fiap.brindes.entity.Categoria;
+import br.com.fiap.brindes.entity.Produto;
+import br.com.fiap.brindes.repository.Produtorepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ProdutoService implements ServiceDTO<Produto, ProdutoRequest, ProdutoResponse> {
@@ -21,6 +24,9 @@ public class ProdutoService implements ServiceDTO<Produto, ProdutoRequest, Produ
 
    @Autowired
    private CategoriaService categoriaService;
+   
+   @PersistenceContext
+   private EntityManager entityManager;
 
 
    /* @Override
@@ -44,16 +50,22 @@ public class ProdutoService implements ServiceDTO<Produto, ProdutoRequest, Produ
     }
 
     @Override
+    @Transactional 
     public Produto toEntity(ProdutoRequest dto) {
+        
+        Categoria categoria = entityManager.getReference(Categoria.class, dto.categoria().id());
 
-        var categoria = categoriaService.findById(dto.categoria().id());
-
-
-        return Produto.builder()
+        
+        Produto produto = Produto.builder()
                 .categoria(categoria)
                 .nome(dto.nome())
                 .preco(dto.preco())
                 .build();
+
+        
+        entityManager.persist(produto);
+
+        return produto;
     }
 
     @Override

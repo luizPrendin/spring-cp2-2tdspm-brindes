@@ -49,6 +49,7 @@ public class CategoriaResource implements ResourceDTO<CategoriaRequest, Categori
     }
 
     @Override
+    @GetMapping
     public ResponseEntity<List<CategoriaResponse>> findAll() {
         Example<Categoria> example = Example.of(new Categoria()); 
         Collection<Categoria> categorias = categoriaService.findAll(example);

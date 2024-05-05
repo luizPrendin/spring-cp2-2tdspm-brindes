@@ -49,6 +49,7 @@ public class ProdutoResource implements ResourceDTO<ProdutoRequest, ProdutoRespo
     }
 
     @Override
+    @GetMapping
     public ResponseEntity<List<ProdutoResponse>> findAll() {
         Example<Produto> example = Example.of(new Produto()); 
         Collection<Produto> produtos = produtoService.findAll(example);
